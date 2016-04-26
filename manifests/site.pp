@@ -45,5 +45,5 @@ node default {
  # notify { "Sup, my name is ${::hostname}": }
   #include users
   #include skeleton
-  include memcached
+ # include memcached
 }
