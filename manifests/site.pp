@@ -43,5 +43,5 @@ node default {
   # Example:
   #   class { 'my_class': }
  # notify { "Sup, my name is ${::hostname}": }
-   notify { "cowsay 'Welcome to $(::fqdn}!'>ect/motd": }
+  include users
 }
