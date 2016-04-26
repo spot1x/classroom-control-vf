@@ -42,5 +42,6 @@ node default {
   # This is where you can declare classes for all nodes.
   # Example:
   #   class { 'my_class': }
-  notify { "Sup, my name is ${::hostname}": }
+ # notify { "Sup, my name is ${::hostname}": }
+   notify { "cowsay 'Welcome to $(::fqdn}!'>ect/motd": }
 }
