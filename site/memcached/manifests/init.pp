@@ -20,7 +20,7 @@ notify => Service['memcached'],
 
 #Service
 service {'memcached':
-enable => running,
+ensure => running,
 enable => true,
 
   }
