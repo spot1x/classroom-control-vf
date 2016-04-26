@@ -43,6 +43,6 @@ node default {
   # Example:
   #   class { 'my_class': }
  # notify { "Sup, my name is ${::hostname}": }
-  include users
-  include skeleton
+  #include users
+  #include skeleton
 }
