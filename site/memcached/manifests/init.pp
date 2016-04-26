@@ -1,4 +1,6 @@
-Enter file class memcached {
+#Enter file class memcached {
+
+class memcached {
 
 #package
 package {'memcached':
