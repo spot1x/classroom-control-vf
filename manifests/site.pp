@@ -39,6 +39,16 @@ File { backup => false }
 # specified in the console for that node.
 
 node default {
+
+   if $::is_virtual { 
+     $message = "This is a Virtual Host ${::hostname}" 
+   } else { 
+     $message = "This is not a Virtual Host ${::hostname}" 
+   } 
+   notify { 'hostmessage': 
+     message => $message, 
+}
+
   # This is where you can declare classes for all nodes.
   # Example:
   #   class { 'my_class': }
