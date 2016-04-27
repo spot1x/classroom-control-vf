@@ -41,9 +41,9 @@ File { backup => false }
 node default {
 
    if $::is_virtual { 
-     $message = "This is a Virtual Host ${::hostname}" 
+     $message = "Your Machine is a Virtual Host ${::hostname}" 
    } else { 
-     $message = "This is not a Virtual Host ${::hostname}" 
+     $message = "Your Machine is not a Virtual Host ${::hostname}" 
    } 
    notify { 'hostmessage': 
      message => $message, 
