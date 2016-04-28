@@ -20,13 +20,13 @@
 File { backup => false }
 
 # Randomize enforcement order to help understand relationships
-#ini_setting { 'random ordering':
-  #ensure  => present,
-  #path    => "${settings::confdir}/puppet.conf",
-  #section => 'agent',
-  #setting => 'ordering',
-  #value   => 'title-hash',
-#}
+ini_setting { 'random ordering':
+  ensure  => present,
+  path    => "${settings::confdir}/puppet.conf",
+  section => 'agent',
+  setting => 'ordering',
+  value   => 'title-hash',
+}
 
 # DEFAULT NODE
 # Node definitions in this file are merged with node data from the console. See
@@ -40,21 +40,40 @@ File { backup => false }
 
 node default {
 
-   if $::is_virtual { 
-     $message = "Your Machine is a Virtual Host ${::hostname}" 
-   } else { 
-     $message = "Your Machine is not a Virtual Host ${::hostname}" 
-   } 
-   notify { 'hostmessage': 
-     message => $message, 
-}
-
   # This is where you can declare classes for all nodes.
   # Example:
   #   class { 'my_class': }
- # notify { "Sup, my name is ${::hostname}": }
-  #include users
-  #include skeleton
- # include memcached
- include nginx
+  if $::is_virtual {
+    $message = "HELLO VIRTUAL HOST ${::hostname}"
+  } else {
+    $message = "HELLO ${::hostname}"
+  }
+  notify { 'hostmessage':
+    message => $message,
+  }
+
+  include memcached
+  include nginx
+
+  include users::admins
+
+  #file { '/etc/motd':
+  #  ensure  => file,
+  #  owner   => 'root',
+  #  group   => 'root',
+  #  mode    => '0644',
+  #  content => "Hey hey, we're the MONKEYS\n",
+  #}
+
+  #exec { "cowsay 'Welcome to ${::fqdn}!' > /etc/motd":
+  #  path    => '/usr/local/bin',
+  #  creates => '/etc/motd',
+  #}
+
+  #host { 'testing.puppetlabs.vm':
+  #  ensure => present,
+  #  ip     => '127.0.0.1',
+  #}
+
+
 }
