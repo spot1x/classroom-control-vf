@@ -1,18 +1,44 @@
 #
 class nginx {
 
-$docroot = '/var/www'
-
-
-File {
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
+  case $::osfamily {
+    'redhat','debian': {
+      $package = 'nginx'
+      $owner   = 'root'
+      $group   = 'root'
+      $docroot = '/var/www'
+      $confdir = '/etc/nginx'
+      $logdir  = '/var/log/nginx'
     }
+    'windows': {
+      $package = 'nginx-service'
+      $owner   = 'Administrator'
+      $group   = 'Administrators'
+      $docroot = 'c:/ProgramData/nginx/html'
+      $confdir = 'c:/ProgramData/nginx'
+      $logdir  = 'c:/ProgramData/nginx/logs'
+    }
+    default: {
+      fail("${::osfamily} is not supported by this module")
+    }
+  }
+  $svc = 'nginx'
+  $source_base = "puppet:///modules/${module_name}"
+  $nginx_user = $::osfamily ? {
+    'redhat'  => 'nginx',
+    'debian'  => 'www-data',
+    'windows' => 'nobody',
+  }
+
+  File {
+    ensure => file,
+    owner  => $owner,
+    group  => $group,
+    mode   => '0644',
+  }
 
   # PACKAGE
-  package { 'nginx':
+  package { $package:
     ensure => present,
   }
 
@@ -22,25 +48,27 @@ File {
   }
 
   # WEB PAGE
-  file { '/var/www/index.html':
-    source => 'puppet:///modules/nginx/index.html',
+  file { "${docroot}/index.html":
+    source => "${source_base}/index.html",
   }
 
   # CONFIG FILES
-  file { '/etc/nginx/nginx.conf':
-    source  => 'puppet:///modules/nginx/nginx.conf',
-    require => Package['nginx'],
-    notify  => Service['nginx'],
+  file { "${confdir}/nginx.conf":
+    #source  => "${source_base}/nginx.conf",
+    content => template('nginx/nginx.conf.erb'),
+    require => Package[$package],
+    notify  => Service[$svc],
   }
 
-  file { '/etc/nginx/conf.d/default.conf':
-    source  => 'puppet:///modules/nginx/default.conf',
-    require => Package['nginx'],
-    notify  => Service['nginx'],
+  file { "${confdir}/conf.d/default.conf":
+    #source  => "${source_base}/default.conf",
+    content => template('nginx/default.conf.erb'),
+    require => Package[$package],
+    notify  => Service[$svc],
   }
 
   # SERVICE
-  service { 'nginx':
+  service { $svc:
     ensure => running,
     enable => true,
   }
