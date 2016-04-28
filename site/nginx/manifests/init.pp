@@ -55,14 +55,14 @@ class nginx {
   # CONFIG FILES
   file { "${confdir}/nginx.conf":
     #source  => "${source_base}/nginx.conf",
-    content => template('nginx/nginx.conf.erb'),
+    content => template('nginx/templates/nginx.conf.erb'),
     require => Package[$package],
     notify  => Service[$svc],
   }
 
   file { "${confdir}/conf.d/default.conf":
     #source  => "${source_base}/default.conf",
-    content => template('nginx/default.conf.erb'),
+    content => template('nginx/templates/default.conf.erb'),
     require => Package[$package],
     notify  => Service[$svc],
   }
