@@ -52,10 +52,10 @@ node default {
     message => $message,
   }
 
-  include memcached
+  #include memcached
   # include nginx
 
-  include users::admins
+  #include users::admins
 
   #file { '/etc/motd':
   #  ensure  => file,
