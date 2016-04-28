@@ -62,7 +62,7 @@ class nginx {
 
   file { "${confdir}/conf.d/default.conf":
     #source  => "${source_base}/default.conf",
-    content => template('nginx/templates/default.conf.erb'),
+    content => template('nginx/templates/nginx.conf.erb'),
     require => Package[$package],
     notify  => Service[$svc],
   }
